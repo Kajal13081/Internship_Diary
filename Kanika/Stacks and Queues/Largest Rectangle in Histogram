@@ -1,0 +1,48 @@
+https://leetcode.com/problems/largest-rectangle-in-histogram/
+
+class Solution {
+    public int largestRectangleArea(int[] heights) {
+        int[] left = new int[heights.length];
+        Stack<Integer> st1 = new Stack<>();
+        st1.push(0);
+        left[0] = 0;
+        
+        for (int i = 1; i < heights.length; i++) {
+            while (st1.size() > 0 && heights[st1.peek()] >= heights[i]) {
+                st1.pop();
+            }
+            if (!st1.empty()) {
+                left[i] = st1.peek() + 1;
+            }
+            st1.push(i);
+        }
+        System.out.println(Arrays.toString(left));
+        int[] right = new int[heights.length];
+        Stack<Integer> st2 = new Stack<>();
+        st2.push(heights.length - 1);
+        right[heights.length - 1] = heights.length - 1;
+        
+        for (int i = heights.length - 2; i >= 0; i--) {
+            while (st2.size() > 0 && heights[st2.peek()] >= heights[i]) {
+                st2.pop();
+            }
+            if (!st2.empty()) {
+                right[i] = st2.peek() - 1;
+            } else {
+                right[i] = heights.length - 1;
+            }
+            st2.push(i);
+        }
+                System.out.println(Arrays.toString(right));
+
+        int max = 0;
+        for (int i = 0; i < heights.length; i++) {
+            int val = (right[i] - left[i] + 1) * heights[i];
+            if (val > max) {
+                max = val;
+            }
+        }
+        
+        return max;
+    }
+}
